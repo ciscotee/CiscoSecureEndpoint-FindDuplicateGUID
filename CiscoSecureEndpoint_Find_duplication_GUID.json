@@ -1,8 +1,8 @@
 {
   "workflow": {
-    "unique_name": "definition_workflow_02FEP8IQ605CJ3m9b1LQ2d4bhP3TuysP4on",
-    "name": "Secure_Endpoint_Find_duplication_GUID",
-    "title": "Secure_Endpoint_Find_duplication_GUID",
+    "unique_name": "definition_workflow_02FEPV7PWWZD44mdH2u722D5NCD1KO8ZLYY",
+    "name": "Copy(1)-Secure_Endpoint_Find_duplication_GUID",
+    "title": "Copy(1)-Secure_Endpoint_Find_duplication_GUID",
     "type": "generic.workflow",
     "base_type": "workflow",
     "variables": [
@@ -17,7 +17,7 @@
           "display_on_wizard": false,
           "is_invisible": false
         },
-        "unique_name": "variable_workflow_02FEP8IQQ6G9T3iVE8ez4vXipJF4S2XOJMl",
+        "unique_name": "variable_workflow_02FEPV7Q778J26anYgMd6tbWawQUwequPw6",
         "object_type": "variable_workflow"
       }
     ],
@@ -31,20 +31,33 @@
         ]
       },
       "delete_workflow_instance": false,
-      "display_name": "Secure_Endpoint_Find_duplication_GUID",
-      "runtime_user": {
-        "target_default": true
-      },
+      "display_name": "Copy(1)-Secure_Endpoint_Find_duplication_GUID",
+      "runtime_user": {},
       "target": {
-        "target_type": "web-service.endpoint",
-        "target_id": "$module_target;Secure Endpoint;securex:ao:secure_endpoint$",
-        "execute_on_workflow_target": true
+        "execute_on_target_group": true,
+        "target_group": {
+          "target_group_id": "target_group_01EJ0TQWPQWBD0qiWqClJKj9FOzwiZRfOFH",
+          "run_on_all_targets": false,
+          "selected_target_types": [
+            "web-service.endpoint"
+          ],
+          "use_criteria": {
+            "choose_target_using_algorithm": "choose_first_with_matching_criteria",
+            "conditions": [
+              {
+                "operator": "eq",
+                "left_operand": "$targetgroup.target_group_01EJ0TQWPQWBD0qiWqClJKj9FOzwiZRfOFH.common.display_name$",
+                "right_operand": "AMP_Target"
+              }
+            ]
+          }
+        }
       }
     },
     "object_type": "definition_workflow",
     "actions": [
       {
-        "unique_name": "definition_activity_02FEP8IV4W5N91cCNlto2DHIJUpR5vInNrI",
+        "unique_name": "definition_activity_02FEPV7X9E2Q53UrFPQpLGclsSrbfA74xac",
         "name": "Secure Endpoint - List Computers",
         "title": "Secure Endpoint - List Computers",
         "type": "workflow.atomic_workflow",
@@ -66,8 +79,7 @@
           },
           "skip_execution": false,
           "target": {
-            "target_type": "web-service.endpoint",
-            "use_workflow_target": true
+            "use_workflow_target_group": true
           },
           "workflow_id": "definition_workflow_02FEG871C16PH7gCl39Zi6H3wtUU2V3HgLA",
           "workflow_name": "Secure Endpoint - List Computers"
@@ -75,7 +87,7 @@
         "object_type": "definition_activity"
       },
       {
-        "unique_name": "definition_activity_02FEP8IYAY6WR73fAPSAHb1bjbVEpNfhvES",
+        "unique_name": "definition_activity_02FEPV7YQ91EI524MPjyrZecD89L3EmWPQH",
         "name": "Group",
         "title": "Digest the data",
         "type": "logic.group",
@@ -88,7 +100,7 @@
         "object_type": "definition_activity",
         "actions": [
           {
-            "unique_name": "definition_activity_02FEP8IZV014E5uTEuNqWNFhAPw6ysCsi7X",
+            "unique_name": "definition_activity_02FEPV80M67BO0aEy7An77bZw93J8Y2GUNc",
             "name": "Execute Python Script",
             "title": "Transform Data",
             "type": "python3.script",
@@ -99,7 +111,7 @@
               "display_name": "Transform Data",
               "script": "import sys\nimport json\n\n# Assuming sys.argv[1] contains the JSON data as a string\ninput_data = sys.argv[1]\n\n# Load JSON data\ndata = json.loads(input_data)\n\n# Transform data to the required format\ntransformed_data = []\nfor item in data:\n    transformed_item = {\n        \"connector_guid\": item[\"connector_guid\"],\n        \"hostname\": item[\"hostname\"],\n        \"last_seen\": item[\"last_seen\"],\n        \"policy\": {\"name\": item[\"policy\"][\"name\"]}\n    }\n    transformed_data.append(transformed_item)\n\n# Store transformed data in an output variable\noutput_variable = json.dumps(transformed_data, indent=2)\n\n# Print or further process output_variable as needed\n#print(output_variable)  # Example: Print JSON output",
               "script_arguments": [
-                "$activity.definition_activity_02FEP8IV4W5N91cCNlto2DHIJUpR5vInNrI.output.variable_workflow_02FEG871YACS866VsRoZWurPWbMmKetSznn$"
+                "$activity.definition_activity_02FEPV7X9E2Q53UrFPQpLGclsSrbfA74xac.output.variable_workflow_02FEG871YACS866VsRoZWurPWbMmKetSznn$"
               ],
               "script_queries": [
                 {
@@ -113,7 +125,7 @@
             "object_type": "definition_activity"
           },
           {
-            "unique_name": "definition_activity_02FEP8J11MBEH4mKt4y7niO690i1t4YaSQq",
+            "unique_name": "definition_activity_02FEPV81X662K2BrmkQGnE8BnpLC5fkmoaT",
             "name": "Execute Python Script",
             "title": "Find Duplicate GUID",
             "type": "python3.script",
@@ -124,7 +136,7 @@
               "display_name": "Find Duplicate GUID",
               "script": "import json\nimport sys\n\n# Input data from sys.argv[1]\ninput_data = sys.argv[1]\n\n# Preprocess JSON to replace single quotes with double quotes for keys (if necessary)\nfixed_json = input_data.replace(\"'\", '\"')\n\n# Load JSON data\ntry:\n    data = json.loads(fixed_json)\nexcept json.JSONDecodeError as e:\n    print(f\"Error decoding JSON: {str(e)}\")\n    sys.exit(1)\n\n# Transform data to the required format\ntransformed_json = []\nfor item in data:\n    transformed_item = {\n        'connector_guid': item['connector_guid'],\n        'hostname': item['hostname'],\n        'last_seen': item['last_seen'],\n        'policy': {'name': item['policy']['name']}\n    }\n    transformed_json.append(transformed_item)\n\n# Check for duplicates based on connector_guid\nconnector_guid_count = {}\nfor item in transformed_json:\n    guid = item['connector_guid']\n    if guid in connector_guid_count:\n        connector_guid_count[guid].append(item)\n    else:\n        connector_guid_count[guid] = [item]\n\n# Generate output if duplicates are found\nduplicate_output = []\nfor guid, items in connector_guid_count.items():\n    if len(items) > 1:\n        duplicate_info = {\n            'GUID': guid,\n            'Hosts with duplicate GUIDs found': len(items),\n            'Details': []\n        }\n        for item in items:\n            detail = f\"hostname: {item['hostname']} LAST SEEN: {item['last_seen']} policy_name: {item['policy']['name']}\"\n            duplicate_info['Details'].append(detail)\n        duplicate_output.append(duplicate_info)\n\n# Prepare the final output structure\noutput_variable = []\n\n# If duplicates are found, include them in the output\nif duplicate_output:\n    output_variable = duplicate_output\n\n# Convert output_variable to nicely formatted JSON string\noutput_json = json.dumps(output_variable, indent=2)\n\n# Print or use output_json as needed\n#print(output_json)",
               "script_arguments": [
-                "$activity.definition_activity_02FEP8IZV014E5uTEuNqWNFhAPw6ysCsi7X.output.script_queries.transformed_json$"
+                "$activity.definition_activity_02FEPV80M67BO0aEy7An77bZw93J8Y2GUNc.output.script_queries.transformed_json$"
               ],
               "script_queries": [
                 {
@@ -140,7 +152,7 @@
         ]
       },
       {
-        "unique_name": "definition_activity_02FEP8J24PJC64leNDWffodrDCoikEpABVm",
+        "unique_name": "definition_activity_02FEPV835MXST4Q1mdOlASTv8yftmAp5rv2",
         "name": "Condition Block",
         "title": "Do we have any duplicate GUID?",
         "type": "logic.if_else",
@@ -153,14 +165,14 @@
         "object_type": "definition_activity",
         "blocks": [
           {
-            "unique_name": "definition_activity_02FEP8J30UAWW3cCvXDhOdPgoIIrh373gbR",
+            "unique_name": "definition_activity_02FEPV844XLRC1Qvv6qK7D3chszxPNXR6se",
             "name": "Condition Branch",
             "title": "No duplicate GUID found",
             "type": "logic.condition_block",
             "base_type": "activity",
             "properties": {
               "condition": {
-                "left_operand": "$activity.definition_activity_02FEP8J11MBEH4mKt4y7niO690i1t4YaSQq.output.script_queries.output$",
+                "left_operand": "$activity.definition_activity_02FEPV81X662K2BrmkQGnE8BnpLC5fkmoaT.output.script_queries.output$",
                 "operator": "eq",
                 "right_operand": "[]"
               },
@@ -171,7 +183,7 @@
             "object_type": "definition_activity",
             "actions": [
               {
-                "unique_name": "definition_activity_02FEP8J4D5WTT5dmqtTxVOhpGLYXqYBnW5F",
+                "unique_name": "definition_activity_02FEPV86447Q01NtJuPfmxJfQI01EIRnuJ4",
                 "name": "Set Variables",
                 "title": "Set Variables",
                 "type": "core.set_multiple_variables",
@@ -182,7 +194,7 @@
                   "skip_execution": false,
                   "variables_to_update": [
                     {
-                      "variable_to_update": "$workflow.definition_workflow_02FEP8IQ605CJ3m9b1LQ2d4bhP3TuysP4on.local.variable_workflow_02FEP8IQQ6G9T3iVE8ez4vXipJF4S2XOJMl$",
+                      "variable_to_update": "$workflow.definition_workflow_02FEPV7PWWZD44mdH2u722D5NCD1KO8ZLYY.local.variable_workflow_02FEPV7Q778J26anYgMd6tbWawQUwequPw6$",
                       "variable_value_new": "No duplicate GUID found"
                     }
                   ]
@@ -192,14 +204,14 @@
             ]
           },
           {
-            "unique_name": "definition_activity_02FEP8J5EQW2G5qblybspxA2EwOpmFhT5Dk",
+            "unique_name": "definition_activity_02FEPV87DP10F78QLDBy7kZoh94qSSPnxTx",
             "name": "Condition Branch",
             "title": "Found duplicate GUID",
             "type": "logic.condition_block",
             "base_type": "activity",
             "properties": {
               "condition": {
-                "left_operand": "$activity.definition_activity_02FEP8J11MBEH4mKt4y7niO690i1t4YaSQq.output.script_queries.output$",
+                "left_operand": "$activity.definition_activity_02FEPV81X662K2BrmkQGnE8BnpLC5fkmoaT.output.script_queries.output$",
                 "operator": "ne",
                 "right_operand": "[]"
               },
@@ -210,7 +222,7 @@
             "object_type": "definition_activity",
             "actions": [
               {
-                "unique_name": "definition_activity_02FEP8J6YWFE71Qu61rSz8oX0NfwN5f0fNg",
+                "unique_name": "definition_activity_02FEPV88WYY2S1d9yW4IbdlZ56DGx2P0MSa",
                 "name": "Set Variables",
                 "title": "Set Variables",
                 "type": "core.set_multiple_variables",
@@ -221,8 +233,8 @@
                   "skip_execution": false,
                   "variables_to_update": [
                     {
-                      "variable_to_update": "$workflow.definition_workflow_02FEP8IQ605CJ3m9b1LQ2d4bhP3TuysP4on.local.variable_workflow_02FEP8IQQ6G9T3iVE8ez4vXipJF4S2XOJMl$",
-                      "variable_value_new": "$activity.definition_activity_02FEP8J11MBEH4mKt4y7niO690i1t4YaSQq.output.script_queries.output$"
+                      "variable_to_update": "$workflow.definition_workflow_02FEPV7PWWZD44mdH2u722D5NCD1KO8ZLYY.local.variable_workflow_02FEPV7Q778J26anYgMd6tbWawQUwequPw6$",
+                      "variable_value_new": "$activity.definition_activity_02FEPV81X662K2BrmkQGnE8BnpLC5fkmoaT.output.script_queries.output$"
                     }
                   ]
                 },
@@ -261,10 +273,9 @@
         "workflows_config": [
           {
             "disabled": false,
-            "ref_id": "definition_workflow_02FEP8IQ605CJ3m9b1LQ2d4bhP3TuysP4on",
+            "ref_id": "definition_workflow_02FEPV7PWWZD44mdH2u722D5NCD1KO8ZLYY",
             "status": {
               "state": "started-polling",
-              "prev_state": "started-polling",
               "error_msg": ""
             }
           }
@@ -274,16 +285,33 @@
       "unique_name": "ruleschedule_02FE1C4TQJP135dTyJ6OcVDLrc6r3sSuxyh"
     }
   },
+  "target_groups": {
+    "target_group_01EJ0TQWPQWBD0qiWqClJKj9FOzwiZRfOFH": {
+      "unique_name": "target_group_01EJ0TQWPQWBD0qiWqClJKj9FOzwiZRfOFH",
+      "name": "Default TargetGroup",
+      "title": "Default TargetGroup",
+      "type": "generic.target_group",
+      "base_type": "target_group",
+      "version": "1.0.0",
+      "targets": [
+        {
+          "data_target_type": "web-service.endpoint",
+          "view_target_type": "web-service.endpoint",
+          "include_all_targets": true
+        },
+        {
+          "data_target_type": "email.smtp_endpoint",
+          "view_target_type": "email.smtp_endpoint",
+          "include_all_targets": true
+        }
+      ],
+      "object_type": "target_group"
+    }
+  },
   "atomic_workflows": [
     "definition_workflow_02FEG871C16PH7gCl39Zi6H3wtUU2V3HgLA"
   ],
   "dependent_workflows": [
     "definition_workflow_02FEG871C16PH7gCl39Zi6H3wtUU2V3HgLA"
-  ],
-  "module_targets": [
-    {
-      "module_type": "Secure Endpoint",
-      "external_id": "securex:ao:secure_endpoint"
-    }
   ]
 }

@@ -1,3 +1,4 @@
+[![published](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg)](https://developer.cisco.com/codeexchange/github/repo/ciscotee/CiscoSecureEndpoint-FindDuplicateGUID)
 # CiscoSecureEndpoint-FindDuplicateGUID
 The Workflow will list computer with GUID and find duplicate GUID. The list of computer API in Cisco Secure Endpoint available on API [V1](https://developer.cisco.com/docs/secure-endpoint/v1-api-reference-computer/)
 
